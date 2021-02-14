@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>questions.json</file>
         <file>Question.qml</file>
         <file>audio.png</file>
     </qresource>
