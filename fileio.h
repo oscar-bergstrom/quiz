@@ -2,6 +2,7 @@
 #define FILEIO_H
 
 #include <QObject>
+#include <QRegularExpression>
 
 
 class FileIO : public QObject
@@ -18,6 +19,7 @@ public:
     Q_INVOKABLE QString read();
     Q_INVOKABLE bool write(const QString& data);
 
+    Q_INVOKABLE QString stripURI(const QString &url) const;
     QString source() { return mSource; }
 
 public slots:
@@ -29,6 +31,7 @@ signals:
 
 private:
     QString mSource;
+    static const QRegularExpression URI;
 };
 
 #endif // FILEIO_H

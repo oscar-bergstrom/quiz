@@ -2,6 +2,9 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include <QString>
+
+const QRegularExpression FileIO::URI("^(file:\\/{3})|(qrc:\\/{2})|(http:\\/{2})");
 
 FileIO::FileIO(QObject *parent) :
     QObject(parent)
@@ -11,11 +14,14 @@ FileIO::FileIO(QObject *parent) :
 
 QString FileIO::read()
 {
-    qDebug() << "Reading:" << mSource;
     if (mSource.isEmpty()){
         emit error("source is empty");
         return QString();
     }
+
+#ifdef Q_OS_WINDOWS
+   mSource = stripURI(mSource);
+#endif
 
     QFile file(mSource);
     QString fileContent;
@@ -50,6 +56,12 @@ bool FileIO::write(const QString& data)
     file.close();
 
     return true;
+}
+
+QString FileIO::stripURI(const QString &url) const
+{
+    QString s(url);
+    return s.replace("file:///", "");
 }
 
 void FileIO::setSource(const QString &source)

@@ -164,8 +164,6 @@ Window {
         console.log("Loading questions from " + fname)
         var text = qFile.read()
         console.log("loaded " + text.length)
-        console.log(text)
-
 
         //var jsonObject = JSON.parse()
     }
@@ -258,7 +256,7 @@ Window {
 
         onAccepted: {
             console.log("You choose: " + openFile.fileUrl)
-            qFile.source = openFile.fileUrl
+            qFile.source = openFile.fileUrl.toString()
         }
 
         onRejected: {
@@ -449,9 +447,11 @@ Window {
 
     Component.onCompleted: {
         console.log("On completed")
+        //qFile.source = "file:///C:/Users/es016672/Projects/intern/quiz/main.qml"
+        //qFile.source = "C:/Users/es016672/Projects/intern/build-quiz-Desktop_Qt_5_15_2_MinGW_64_bit-Debug/Makefile"
         openFile.visible = true
         //loadJSONFile("file:///C:/Users/bergström/Documents/Qt/quiz/example.json")
         //readFile("file:///C:/Users/bergström/Documents/Qt/quiz/example.json")
-        readFile("file:///../quiz/example.json")
+        //readFile("file:///../quiz/example.json")
     }
 }
