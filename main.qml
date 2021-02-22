@@ -2,8 +2,11 @@ import QtQuick 2.10
 import QtQuick.Window 2.10
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs 1.2
 
 import QtMultimedia 5.9
+
+import FileIO 1.0
 
 Window {
     id: page
@@ -157,6 +160,16 @@ Window {
         },
     ]
 
+    function loadJSONFile(fname) {
+        console.log("Loading questions from " + fname)
+        var text = qFile.read()
+        console.log("loaded " + text.length)
+        console.log(text)
+
+
+        //var jsonObject = JSON.parse()
+    }
+
     Rectangle {
         anchors.fill: parent
         color: "black"
@@ -226,6 +239,30 @@ Window {
                 }
 
             }
+        }
+    }
+
+    FileIO {
+        id: qFile
+        source: ""
+        onError: console.log(msg)
+        onSourceChanged: {
+            console.log("Source changed to " + source)
+            loadJSONFile();
+        }
+    }
+
+    FileDialog {
+        id: openFile
+        title: "Choose you questions file"
+
+        onAccepted: {
+            console.log("You choose: " + openFile.fileUrl)
+            qFile.source = openFile.fileUrl
+        }
+
+        onRejected: {
+            console.log("Canceled")
         }
     }
 
@@ -412,6 +449,9 @@ Window {
 
     Component.onCompleted: {
         console.log("On completed")
-
+        openFile.visible = true
+        //loadJSONFile("file:///C:/Users/bergström/Documents/Qt/quiz/example.json")
+        //readFile("file:///C:/Users/bergström/Documents/Qt/quiz/example.json")
+        readFile("file:///../quiz/example.json")
     }
 }
