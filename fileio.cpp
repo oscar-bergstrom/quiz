@@ -30,6 +30,7 @@ QString FileIO::read()
     if ( file.open(QIODevice::ReadOnly) ) {
         QString line;
         QTextStream t( &file );
+        t.setCodec("UTF-8");
         do {
             line = t.readLine();
             fileContent += line;
