@@ -1,8 +1,10 @@
 #include "fileio.h"
 #include <QFile>
+#include <QDir>
 #include <QTextStream>
 #include <QDebug>
 #include <QString>
+#include <QFileInfo>
 
 const QRegularExpression FileIO::URI("^(file:\\/{3})|(qrc:\\/{2})|(http:\\/{2})");
 
@@ -64,10 +66,23 @@ QString FileIO::stripURI(const QString &url) const
     return s.replace("file:///", "");
 }
 
+QString FileIO::path() const
+{
+    return mPath;
+}
+
 void FileIO::setSource(const QString &source)
 {
+
     if (source != mSource) {
+
+        QFileInfo f(source);
+        mPath = f.dir().path();
+        emit pathChanged(mPath);
+
         mSource = source;
         emit sourceChanged(mSource);
+
+
     }
 }
