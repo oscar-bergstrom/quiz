@@ -20,8 +20,6 @@ Window {
     property int questionHeight: 100
     property int spacing: 10
 
-    property url path: "file:///Users/es016672/Projects/intern/aw-quiz"
-
     property var categories: [
         {
             title:"Category",
@@ -54,8 +52,10 @@ Window {
 
     function loadJSONFile() {
         console.log("Loading questions from " + qFile.source)
+        console.log("- folder: " + qFile.path)
         var text = qFile.read()
         console.log("loaded " + text.length)
+
 
         var jsonObject = JSON.parse(text)
         //console.log("my json: " + JSON.stringify(categories, undefined, 2))
@@ -245,17 +245,17 @@ Window {
                         case noType:
                             return
                         case imageType:
-                            image.source = path + "/" + media
+                            image.source = qFile.path + "/" + media
                             image.visible = true
                             return
                         case videoType:
-                            mediaplayer.source = path + "/" + media
+                            mediaplayer.source = qFile.path + "/" + media
                             video.visible = true
                             mediaplayer.play()
                             return
                         case audioType:
                             image.source = "qrc:///audio.png"
-                            mediaplayer.source = path + "/" + media
+                            mediaplayer.source = qFile.path + "/" + media
                             image.visible = true
                             mediaplayer.play()
 
@@ -342,8 +342,8 @@ Window {
 
     Component.onCompleted: {
         console.log("On completed")
-        qFile.source = "file:///C:/Users/es016672/Projects/intern/aw-quiz/aw-quiz.json"
-        //openFile.visible = true
+        //qFile.source = "file:///C:/Users/es016672/Projects/intern/aw-quiz/aw-quiz.json"
+        openFile.visible = true
 
     }
 }
