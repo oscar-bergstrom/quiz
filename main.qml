@@ -2,8 +2,11 @@ import QtQuick 2.10
 import QtQuick.Window 2.10
 import QtQuick.Controls 2.4
 import QtQuick.Layouts 1.3
+import QtQuick.Dialogs 1.2
 
 import QtMultimedia 5.9
+
+import FileIO 1.0
 
 Window {
     id: page
@@ -17,145 +20,48 @@ Window {
     property int questionHeight: 100
     property int spacing: 10
 
-    property url path: "file:///Users/es016672/Projects/intern/aw-quiz"
-
     property var categories: [
         {
-            title:"Covers",
+            title:"Category",
             q1: {
-                q: "Vem gjorde orginalet?",
-                qm: "covers/sns-shook.mp4",
-                a: "ACDC",
-                am: "covers/acdc-shook.mp4"
+                q: "Question 1",
+                qm: "",
+                a: "",
+                am: ""
             },
             q2: {
-                q: "Vem gjorde orginalet?",
-                qm: "covers/hugo-99.mp4",
-                a: "Jay Z",
-                am: "covers/jay-99.mp4"
+                q: "Question 2",
+                qm: "",
+                a: "",
+                am: ""
             },
             q3: {
-                q: "Vem gjorde orginalet?",
-                qm: "covers/cash-hurt.mp4",
-                a: "Nine Inch Nails",
-                am: "covers/nin-hurt.mp4"
+                q: "Question 3",
+                qm: "",
+                a: "",
+                am: ""
             },
             q4: {
-                q: "Vem gjorde orginalet?",
-                qm: "covers/jules-mad.mp4",
-                a: "Tears For Fears",
-                am: "covers/tff-mad.mp4"
+                q: "Question 4",
+                qm: "",
+                a: "",
+                am: ""
             },
-        },
-        {
-            title:"Citat från filmer",
-            q1: {
-                q: "Från vilken film kommer ljudet?",
-                qm: "movies/shining.wav",
-                a: "The Shining",
-                am: "movies/shining.mp4"
-            },
-            q2: {
-                q: "Från vilken film kommer ljudet?",
-                qm: "movies/toystory.wav",
-                a: "Toy Story",
-                am: "movies/toystory.mp4"
-            },
-            q3: {
-                q: "Från vilken film kommer ljudet?",
-                qm: "movies/bb.wav",
-                a: "Blues Brothers",
-                am: "movies/bb.mp4"
-            },
-            q4: {
-                q: "Från vilken film kommer ljudet?",
-                qm: "movies/future.wav",
-                a: "Back to the future",
-                am: "movies/future.mp4"
-            },
-        },
-        {
-            title:"Musikvideor",
-            q1: {
-                q: "Vad heter låten?",
-                qm: "musicless/1_take_ml.mp4",
-                a: "Aha - Take on me",
-                am: "musicless/1_take.mp4"
-            },
-            q2: {
-                q: "Vad heter låten?",
-                qm: "musicless/2_dancing_ml.mp4",
-                a: "Bowie & Jagger - Dancing in the streets",
-                am: "musicless/2_dancing.mp4"
-            },
-            q3: {
-                q: "Vad heter låten?",
-                qm: "musicless/3_firestarter_ml.mp4",
-                a: "The Prodigy - Firestarter",
-                am: "musicless/3_firestarter.mp4"
-            },
-            q4: {
-                q: "Vad heter låten?",
-                qm: "musicless/4_chandelier_ml.mp4",
-                a: "Sia - Chandelier",
-                am: "musicless/4_chandelier.mp4"
-            },
-        },
-        {
-            title:"Gissa gruppen",
-            q1: {
-                q: "Vad heter gruppen?",
-                qm: "groups/queen.jpg",
-                a: "Queen",
-                am: "groups/a_queen.jpg"
-            },
-            q2: {
-                q: "Vad heter gruppen?",
-                qm: "groups/spice_girls.jpg",
-                a: "Spice Girls",
-                am: "groups/a_spice_girls.jpg"
-            },
-            q3: {
-                q: "Vad heter gruppen?",
-                qm: "groups/arctic_monkeys.jpg",
-                a: "Arctic Monkeys",
-                am: "groups/a_arctic_monkeys.jpg"
-            },
-            q4: {
-                q: "Vad heter gruppen?",
-                qm: "groups/ratm.png",
-                a: "Rage Against The Machine",
-                am: "groups/a_ratm.jpg"
-            },
-        },
-        {
-            title:"Vilket land?",
-            q1: {
-                q: "Från vilket land kommer dessa artister?",
-                qm: "countries/finland.mp4",
-                a: "Finland",
-                am: "countries/finland.jpg"
-            },
-            q2: {
-                q: "Från vilket land kommer dessa artister?",
-                qm: "countries/ireland.mp4",
-                a: "Irland",
-                am: "countries/ireland.jpg"
-            },
-            q3: {
-                q: "Från vilket land kommer dessa artister?",
-                qm: "countries/canada.mp4",
-                a: "Kanada",
-                am: "countries/canada.jpg"
-            },
-            q4: {
-                q: "Från vilket land kommer dessa artister?",
-                qm: "countries/france.mp4",
-                a: "Frankrike",
-                am: "countries/france.jpg"
-            },
-        },
+        }
     ]
+
+    function loadJSONFile() {
+        console.log("Loading questions from " + qFile.source)
+        console.log("- folder: " + qFile.path)
+        var text = qFile.read()
+        console.log("loaded " + text.length)
+
+
+        var jsonObject = JSON.parse(text)
+        //console.log("my json: " + JSON.stringify(categories, undefined, 2))
+
+        page.categories = jsonObject
+    }
 
     Rectangle {
         anchors.fill: parent
@@ -226,6 +132,30 @@ Window {
                 }
 
             }
+        }
+    }
+
+    FileIO {
+        id: qFile
+        source: ""
+        onError: console.log(msg)
+        onSourceChanged: {
+            console.log("Source changed to " + source)
+            loadJSONFile();
+        }
+    }
+
+    FileDialog {
+        id: openFile
+        title: "Choose you questions file"
+
+        onAccepted: {
+            console.log("You choose: " + openFile.fileUrl)
+            qFile.source = openFile.fileUrl.toString()
+        }
+
+        onRejected: {
+            console.log("Canceled")
         }
     }
 
@@ -315,17 +245,17 @@ Window {
                         case noType:
                             return
                         case imageType:
-                            image.source = path + "/" + media
+                            image.source = qFile.path + "/" + media
                             image.visible = true
                             return
                         case videoType:
-                            mediaplayer.source = path + "/" + media
+                            mediaplayer.source = qFile.path + "/" + media
                             video.visible = true
                             mediaplayer.play()
                             return
                         case audioType:
                             image.source = "qrc:///audio.png"
-                            mediaplayer.source = path + "/" + media
+                            mediaplayer.source = qFile.path + "/" + media
                             image.visible = true
                             mediaplayer.play()
 
@@ -412,6 +342,8 @@ Window {
 
     Component.onCompleted: {
         console.log("On completed")
+        //qFile.source = "file:///C:/Users/es016672/Projects/intern/aw-quiz/aw-quiz.json"
+        openFile.visible = true
 
     }
 }
