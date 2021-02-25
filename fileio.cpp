@@ -23,7 +23,10 @@ QString FileIO::read()
 
 #ifdef Q_OS_WINDOWS
    mSource = stripURI(mSource);
+#elif defined (Q_OS_LINUX)
+    mSource = "/" + stripURI(mSource);
 #endif
+
 
     QFile file(mSource);
     QString fileContent;
