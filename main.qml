@@ -212,6 +212,8 @@ Window {
                     readonly property int videoType: 2
                     readonly property int imageType: 3
 
+                    property int currentType: noType
+
                     function getFileType(name) {
                         try {
                             var ext = name.toLowerCase().split(".").pop()
@@ -241,7 +243,8 @@ Window {
                         image.visible = false
                         video.visible = false
 
-                        switch(getFileType(media)) {
+                        currentType = getFileType(media)
+                        switch(currentType) {
                         case noType:
                             return
                         case imageType:
@@ -270,6 +273,8 @@ Window {
                         onError: {
                             console.log("E: " + errorString)
                         }
+
+                        onSourceChanged: console.log("Source changed to: " + source)
                     }
 
                     VideoOutput {
@@ -311,7 +316,7 @@ Window {
 
 
                     Row {
-                        enabled: mediaplayer.hasAudio || mediaplayer.hasVideo
+                        enabled: player.currentType === player.audioType || player.currentType === player.videoType
                         spacing: parent.spacing
 
                         Button {
@@ -343,6 +348,7 @@ Window {
     Component.onCompleted: {
         console.log("On completed")
         //qFile.source = "file:///C:/Users/es016672/Projects/intern/aw-quiz/aw-quiz.json"
+        //qFile.source = "file:///home/oscar/projects/quiz/aw-quiz/aw-quiz.json"
         openFile.visible = true
 
     }
