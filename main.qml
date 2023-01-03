@@ -269,6 +269,7 @@ Window {
                         id: mediaplayer
                         autoLoad: true
                         autoPlay: false
+                        notifyInterval: 250
 
                         onError: {
                             console.log("E: " + errorString)
@@ -290,6 +291,23 @@ Window {
                         anchors.fill: parent
                         fillMode: Image.PreserveAspectFit
                         visible: false
+                    }
+                }
+
+                ProgressBar {
+                    id: mediaProgress
+                    from: 0
+                    to: mediaplayer.duration
+                    value: mediaplayer.position
+                    Layout.fillWidth: true
+                    visible: player.currentType === player.audioType || player.currentType === player.videoType
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            var relativePosition = mouseX/width
+                            mediaplayer.seek(relativePosition * mediaplayer.duration)
+                        }
                     }
                 }
 
@@ -316,7 +334,7 @@ Window {
 
 
                     Row {
-                        enabled: player.currentType === player.audioType || player.currentType === player.videoType
+                        enabled: mediaProgress.visible
                         spacing: parent.spacing
 
                         Button {
